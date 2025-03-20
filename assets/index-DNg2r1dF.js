@@ -53,7 +53,7 @@ class Footer {
   }
   render() {
     __privateGet(this, _footer).innerHTML = `
-        <p><img src="./woowacourse_logo.png" width="180" /></p>
+        <p><img src="https://h0ngju.github.io/javascript-movie-review/woowacourse_logo.png" width="180" /></p>
         <p>&copy; 우아한테크코스 All Rights Reserved.</p>
       `;
   }
@@ -103,7 +103,7 @@ class MainBanner {
            
         <div class="main-banner__info">
            <div class="main-banner__rate">
-                <img src="./star_empty.png" class="main-banner__rating-star" />
+                <img src="https://h0ngju.github.io/javascript-movie-review/star_empty.png" class="main-banner__rating-star" />
                 <span class="main-banner__rate-value text-subtitle">${__privateGet(this, _data).score}</span>
             </div>
               <div class="main-banner__title text-title">${__privateGet(this, _data).title}</div>
@@ -136,7 +136,7 @@ class MovieItem {
         <img class="thumbnail" src=${__privateMethod(this, _MovieItem_instances, matchImgUrl_fn).call(this)} alt=${__privateGet(this, _data2).title}/>
         <div class="item-desc">
           <p class="rate">
-            <img src="./star_empty.png" class="star" />
+            <img src="https://h0ngju.github.io/javascript-movie-review/star_empty.png" class="star" />
             <span>${__privateGet(this, _data2).score}</span>
           </p>
           <strong class = 'text-body'>${__privateGet(this, _data2).title}</strong>
@@ -152,7 +152,7 @@ _data2 = new WeakMap();
 _MovieItem_instances = new WeakSet();
 matchImgUrl_fn = function() {
   if (__privateGet(this, _data2).imgUrl.includes("null")) {
-    return "./empty-item.png";
+    return "https://h0ngju.github.io/javascript-movie-review/empty-item.png";
   }
   return __privateGet(this, _data2).imgUrl;
 };
@@ -171,7 +171,7 @@ class ErrorMessage {
   }
   render() {
     __privateGet(this, _container3).innerHTML = `
-        <img src="./no-result.png" alt="으아아 행성이"/>
+        <img src="https://h0ngju.github.io/javascript-movie-review/no-result.png" alt="으아아 행성이"/>
         <p class="text-subtitle">${__privateGet(this, _errorMessage)}</p>
     `;
   }
@@ -540,7 +540,7 @@ class SearchBar {
   render() {
     __privateGet(this, _container9).innerHTML = `
       <input placeholder="검색어를 입력하세요" class="text-placeholder searchbar__input" />
-      <img src="./search-icon.png" class="searchbar__icon"/>
+      <img src="https://h0ngju.github.io/javascript-movie-review/search-icon.png" class="searchbar__icon"/>
   `;
   }
   get element() {
@@ -601,7 +601,7 @@ class Header {
   render() {
     __privateGet(this, _container10).innerHTML = `
     <h1 class="logo"/>
-         <img src="./logo.png" alt="MovieList" ></h1>
+         <img src="https://h0ngju.github.io/javascript-movie-review/logo.png" alt="MovieList" ></h1>
     `;
     __privateMethod(this, _Header_instances, bindLogoClickEvent_fn).call(this);
     const searchBarWrapper = document.createElement("div");
