@@ -136,7 +136,7 @@ class MovieItem {
         <img class="thumbnail" src=${__privateMethod(this, _MovieItem_instances, matchImgUrl_fn).call(this)} alt=${__privateGet(this, _data2).title}/>
         <div class="item-desc">
           <p class="rate">
-            <img src="/star_empty.png" class="star" />
+            <img src="https://h0ngju.github.io/javascript-movie-review/star_empty.png" class="star" />
             <span>${__privateGet(this, _data2).score}</span>
           </p>
           <strong class = 'text-body'>${__privateGet(this, _data2).title}</strong>
