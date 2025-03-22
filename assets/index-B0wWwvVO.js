@@ -550,6 +550,11 @@ async function redirectToPage(url) {
   history.pushState({}, "", url);
   await renderContent();
 }
+function initRouter() {
+  window.addEventListener("popstate", () => {
+    renderContent();
+  });
+}
 async function renderContent() {
   const $layoutContainer = $({ selector: ".content" });
   if ($layoutContainer) {
@@ -687,5 +692,6 @@ _header = new WeakMap();
 _footer2 = new WeakMap();
 _contentContainer = new WeakMap();
 window.addEventListener("load", () => {
+  initRouter();
   new Layout();
 });
