@@ -1,8 +1,8 @@
 .searchbar {
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
+  /* display: inline-flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* gap: 8px; */
   max-width: 525px;
   width: 50%;
   padding: 6px 16px;
@@ -13,6 +13,7 @@
 
 .searchbar__input {
   flex: 1;
+  color: var(--color-white);
   &::placeholder {
     color: var(--color-white);
   }
@@ -22,6 +23,21 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+.searchbar__button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.searchbar__form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -263,6 +279,7 @@ p.rate > span {
 .button--medium {
   width: 100%;
   max-width: 1280px;
+  margin: 20px 0 20px 0;
 }
 
 .thumbnail-list {
@@ -404,6 +421,10 @@ p.rate > span {
 
 .empty-result p {
   color: var(--color-white);
+}
+
+.search-page {
+  margin: 20px;
 }
 
 body {
