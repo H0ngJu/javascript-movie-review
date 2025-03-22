@@ -225,7 +225,7 @@ class MovieGrid {
     __privateSet(this, _listElement, $({ root: __privateGet(this, _container4), selector: ".thumbnail-list" }));
     newItems.forEach((movieItem) => {
       const item = new MovieItem({ data: movieItem });
-      if (!__privateGet(this, _listElement)) throw new Error("listElement아 존재하지 않습니다.");
+      if (!__privateGet(this, _listElement)) throw new Error("listElement가 존재하지 않습니다.");
       __privateGet(this, _listElement).insertAdjacentHTML("beforeend", item.element.outerHTML);
     });
   }
