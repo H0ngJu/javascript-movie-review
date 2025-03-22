@@ -6,7 +6,7 @@ var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read fr
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
-var _footer, _button, _onClick, _bindEvent, _container, _data, _MainBanner_instances, detailButtonElement_fn, _container2, _data2, _MovieItem_instances, matchImgUrl_fn, _container3, _errorMessage, _container4, _movieItems, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _MainPage_instances, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, loadMoreButtonElement_fn, _loadMoreData, _container7, _movieListData2, _isLoading2, _query, _currentPage2, _totalPage, _SearchPage_instances, movieGridElement_fn2, loadMoreButtonElement_fn2, _loadMoreData2, titleElement_fn2, _container8, _container9, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindEnterEvent_fn, bindSearchIconEvent_fn, search_fn, bindEvent_fn, _container10, _searchBar, _Header_instances, bindLogoClickEvent_fn, _container11, _header, _footer2, _contentContainer;
+var _footer, _button, _onClick, _bindEvent, _container, _data, _MainBanner_instances, detailButtonElement_fn, _container2, _data2, _MovieItem_instances, matchImgUrl_fn, _container3, _errorMessage, _container4, _movieItems, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _MainPage_instances, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, loadMoreButtonElement_fn, _loadMoreData, _container7, _movieListData2, _isLoading2, _query, _currentPage2, _totalPage, _SearchPage_instances, movieGridElement_fn2, loadMoreButtonElement_fn2, _loadMoreData2, titleElement_fn2, _container8, _container9, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindEnterEvent_fn, bindSearchIconEvent_fn, search_fn, bindEvent_fn, _container10, _Header_instances, bindLogoClickEvent_fn, _container11, _header, _footer2, _contentContainer;
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -44,6 +44,15 @@ var _footer, _button, _onClick, _bindEvent, _container, _data, _MainBanner_insta
     fetch(link.href, fetchOpts);
   }
 })();
+const SYSTEM_CONSTANTS = Object.freeze({
+  BASE_IMG_URL: "https://image.tmdb.org/t/p/w500",
+  SEARCH_URL: (searchValue, page) => `https://api.themoviedb.org/3/search/movie?query=${searchValue}&language=ko-KR&include_adult=false&page=${page}`,
+  MAIN_URL: (page) => `https://api.themoviedb.org/3/movie/popular?language=ko-KR&include_adult=false&page=${page}`
+});
+const IMAGE_URL = Object.freeze({
+  LOGO: `${"/javascript-movie-review/"}logo.png`,
+  WOOWA_LOGO: `${"/javascript-movie-review/"}woowacourse_logo.png`
+});
 class Footer {
   constructor() {
     __privateAdd(this, _footer);
@@ -53,7 +62,7 @@ class Footer {
   }
   render() {
     __privateGet(this, _footer).innerHTML = `
-        <p><img src="https://h0ngju.github.io/javascript-movie-review/woowacourse_logo.png" width="180" /></p>
+        <p><img src=${IMAGE_URL.WOOWA_LOGO} width="180" /></p>
         <p>&copy; 우아한테크코스 All Rights Reserved.</p>
       `;
   }
@@ -156,9 +165,17 @@ matchImgUrl_fn = function() {
   }
   return __privateGet(this, _data2).imgUrl;
 };
-const ERROR_MESSAGE = {
+const ERROR_MESSAGE = Object.freeze({
   NO_RESULT: "저런! 검색 결과가 없네요 😅",
   FETCH_FAILED: "서버에서 데이터를 불러 오는데 실패했어요 😭"
+});
+const STATUS_CODE_MESSAGE = {
+  400: "잘못된 요청입니다.",
+  401: "인증되지 않은 요청입니다.",
+  403: "접근 권한이 없습니다.",
+  404: "찾을 수 없는 페이지입니다.",
+  429: "요청이 너무 많습니다.",
+  500: "서버 에러가 발생했습니다."
 };
 class ErrorMessage {
   constructor({ errorMessage }) {
@@ -230,39 +247,46 @@ class Title {
 }
 _container5 = new WeakMap();
 _text = new WeakMap();
-const SYSTEM_CONSTANTS = Object.freeze({
-  BASE_IMG_URL: "https://image.tmdb.org/t/p/w500",
-  SEARCH_URL: (searchValue, page) => `https://api.themoviedb.org/3/search/movie?query=${searchValue}&language=ko-KR&include_adult=false&page=${page}`,
-  MAIN_URL: (page) => `https://api.themoviedb.org/3/movie/popular?language=ko-KR&include_adult=false&page=${page}`
-});
-async function extractedeData(url) {
-  const movieJSON = await fetchMovieList(url);
-  const movieListData = movieJSON.results.map((movieItem) => ({
+async function extractedData(url) {
+  const movieList = await fetchMovieList(url);
+  const movieListData = movieList.results.map((movieItem) => ({
     title: movieItem.title,
     imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${movieItem.poster_path}`,
     score: Number(movieItem.vote_average.toFixed(1))
   }));
-  const totalPage = movieJSON.total_pages;
+  const totalPage = movieList.total_pages;
   return { movieListData, totalPage };
+}
+function fetchErrorHandler(error) {
+  redirectToPage("/error");
+  throw new Error(`${error.message} 에러가 발생했습니다.`);
 }
 async function fetchMovieList(url) {
   const options = {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Mjg2NjAzNjJjNTFlZDdiYmFhYTY0ZjJiNDA1N2RjMCIsIm5iZiI6MTc0MjI3ODUwNy42NDMwMDAxLCJzdWIiOiI2N2Q5MGY2YmMwNTY2YTEwMGEwODgwYzciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.PJb_lmB5uMCu2xFnSHsP_USp8A6S7CI5rL8l_6u1euk"}`
+      Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDFlZjU1NDhlYjJhMzcxNGVlZGU4ZDlhOTc5OTM4YiIsIm5iZiI6MTc0MjI3ODcxOC43OTIsInN1YiI6IjY3ZDkxMDNlYzUzMzllYWJjNjM2NTUxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MWyqHYcKklHJtdt77FdqeixOePsLny3siiYW-VRDsIk"}`
     }
   };
   try {
-    const res = await fetch(url, options);
-    const json = await res.json();
-    return json;
-  } catch (err) {
-    if (err instanceof Error) {
-      redirectToPage("/error");
+    const response = await fetch(url, options);
+    if (!response.ok) errorHandlerByStatusCode(response.status);
+    const responsedData = await response.json();
+    return responsedData;
+  } catch (error) {
+    if (error instanceof Error) {
+      fetchErrorHandler(error);
     }
   }
 }
+function errorHandlerByStatusCode(statusCode) {
+  const errorMessage = STATUS_CODE_MESSAGE[statusCode] ?? `${statusCode} 에러가 발생했습니다.`;
+  throw new Error(errorMessage);
+}
+const $ = ({ root = document, selector }) => {
+  return root.querySelector(selector);
+};
 const skeletonItems$1 = Array(20).fill("").map(
   () => `
   <li>
@@ -317,7 +341,7 @@ class MainPage {
     __privateAdd(this, _isLoading, true);
     __privateAdd(this, _loadMoreData, async () => {
       __privateSet(this, _currentPage, __privateGet(this, _currentPage) + 1);
-      const { movieListData } = await extractedeData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage)));
+      const { movieListData } = await extractedData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage)));
       __privateSet(this, _movieListData, movieListData);
       this.renderDynamicSection();
     });
@@ -328,7 +352,7 @@ class MainPage {
   async init() {
     __privateSet(this, _isLoading, true);
     this.render();
-    const { movieListData } = await extractedeData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage)));
+    const { movieListData } = await extractedData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage)));
     __privateSet(this, _movieListData, movieListData);
     __privateSet(this, _isLoading, false);
     this.render();
@@ -344,9 +368,9 @@ class MainPage {
     this.renderDynamicSection();
   }
   renderDynamicSection() {
-    const loadMoreButton = document.querySelector(".button--medium");
-    if (loadMoreButton) {
-      loadMoreButton.remove();
+    const $loadMoreButton = $({ selector: ".button--medium" });
+    if ($loadMoreButton) {
+      $loadMoreButton.remove();
     }
     __privateGet(this, _container6).appendChild(__privateMethod(this, _MainPage_instances, movieGridElement_fn).call(this));
     __privateGet(this, _container6).appendChild(__privateMethod(this, _MainPage_instances, loadMoreButtonElement_fn).call(this));
@@ -417,7 +441,7 @@ class SearchPage {
     __privateAdd(this, _totalPage, 0);
     __privateAdd(this, _loadMoreData2, async () => {
       __privateSet(this, _currentPage2, __privateGet(this, _currentPage2) + 1);
-      const { movieListData } = await extractedeData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage2)));
+      const { movieListData } = await extractedData(SYSTEM_CONSTANTS.SEARCH_URL(__privateGet(this, _query), __privateGet(this, _currentPage2)));
       __privateSet(this, _movieListData2, movieListData);
       this.renderDynamicSection();
     });
@@ -431,7 +455,7 @@ class SearchPage {
     __privateSet(this, _isLoading2, true);
     this.render();
     if (__privateGet(this, _query)) {
-      const { movieListData, totalPage } = await extractedeData(
+      const { movieListData, totalPage } = await extractedData(
         SYSTEM_CONSTANTS.SEARCH_URL(__privateGet(this, _query), __privateGet(this, _currentPage2))
       );
       __privateSet(this, _movieListData2, movieListData);
@@ -450,9 +474,9 @@ class SearchPage {
     this.renderDynamicSection();
   }
   renderDynamicSection() {
-    const loadMoreButton = document.querySelector(".button--medium");
-    if (loadMoreButton) {
-      loadMoreButton.remove();
+    const $loadMoreButton = $({ selector: ".button--medium" });
+    if ($loadMoreButton) {
+      $loadMoreButton.remove();
     }
     __privateGet(this, _container7).appendChild(__privateMethod(this, _SearchPage_instances, movieGridElement_fn2).call(this));
     if (__privateGet(this, _currentPage2) !== __privateGet(this, _totalPage)) __privateGet(this, _container7).appendChild(__privateMethod(this, _SearchPage_instances, loadMoreButtonElement_fn2).call(this));
@@ -488,13 +512,11 @@ class ErrorPage {
   }
 }
 _container8 = new WeakMap();
-function routes() {
-  return {
-    "/": () => new MainPage().element,
-    "/search": () => new SearchPage().element,
-    "/error": () => new ErrorPage().element
-  };
-}
+const routes = {
+  "/": () => new MainPage().element,
+  "/search": () => new SearchPage().element,
+  "/error": () => new ErrorPage().element
+};
 async function renderInnerContentsByRoute() {
   const base = "/javascript-movie-review";
   let currentPath = window.location.pathname;
@@ -507,23 +529,23 @@ async function renderInnerContentsByRoute() {
   if (currentPath.startsWith("/search")) {
     currentPath = "/search";
   }
-  return routes()[currentPath]();
+  return routes[currentPath]();
 }
 async function redirectToPage(url) {
   history.pushState({}, "", url);
   await renderContent();
 }
 async function renderContent() {
-  const layoutContainer = document.querySelector(".content");
-  if (layoutContainer) {
-    const oldContent = layoutContainer.querySelector(".render-content");
-    if (oldContent) {
-      oldContent.remove();
+  const $layoutContainer = $({ selector: ".content" });
+  if ($layoutContainer) {
+    const $oldContent = $({ root: $layoutContainer, selector: ".render-content" });
+    if ($oldContent) {
+      $oldContent.remove();
     }
     const newContent = await renderInnerContentsByRoute();
     if (newContent) {
       newContent.classList.add("render-content");
-      layoutContainer.appendChild(newContent);
+      $layoutContainer.appendChild(newContent);
     }
   }
 }
@@ -551,24 +573,24 @@ _container9 = new WeakMap();
 _searchValue = new WeakMap();
 _SearchBar_instances = new WeakSet();
 bindInputEvent_fn = function() {
-  const input = __privateGet(this, _container9).querySelector(".searchbar__input");
-  input == null ? void 0 : input.addEventListener("input", (event) => {
+  const $input = $({ root: __privateGet(this, _container9), selector: ".searchbar__input" });
+  $input == null ? void 0 : $input.addEventListener("input", (event) => {
     if (event.target instanceof HTMLInputElement) {
       __privateSet(this, _searchValue, event.target.value);
     }
   });
 };
 bindEnterEvent_fn = function() {
-  const input = __privateGet(this, _container9).querySelector(".searchbar__input");
-  input == null ? void 0 : input.addEventListener("keydown", (event) => {
+  const $input = $({ root: __privateGet(this, _container9), selector: ".searchbar__input" });
+  $input == null ? void 0 : $input.addEventListener("keydown", (event) => {
     if (event instanceof KeyboardEvent && event.key === "Enter" && event.target instanceof HTMLInputElement) {
       __privateMethod(this, _SearchBar_instances, search_fn).call(this);
     }
   });
 };
 bindSearchIconEvent_fn = function() {
-  const icon = __privateGet(this, _container9).querySelector(".searchbar__icon");
-  icon == null ? void 0 : icon.addEventListener("click", () => {
+  const $icon = $({ root: __privateGet(this, _container9), selector: ".searchbar__icon" });
+  $icon == null ? void 0 : $icon.addEventListener("click", () => {
     __privateMethod(this, _SearchBar_instances, search_fn).call(this);
   });
 };
@@ -577,7 +599,6 @@ search_fn = function() {
   const params = new URLSearchParams(window.location.search);
   params.set("query", __privateGet(this, _searchValue));
   const searchUrl = `/search?${params.toString()}`;
-  window.history.pushState({}, "", searchUrl);
   redirectToPage(searchUrl);
 };
 bindEvent_fn = function() {
@@ -589,10 +610,8 @@ class Header {
   constructor() {
     __privateAdd(this, _Header_instances);
     __privateAdd(this, _container10);
-    __privateAdd(this, _searchBar);
     __privateSet(this, _container10, document.createElement("header"));
     __privateGet(this, _container10).className = "header";
-    __privateSet(this, _searchBar, new SearchBar());
     this.render();
   }
   get element() {
@@ -600,23 +619,23 @@ class Header {
   }
   render() {
     __privateGet(this, _container10).innerHTML = `
-    <h1 class="logo"/>
-         <img src="https://h0ngju.github.io/javascript-movie-review/logo.png" alt="MovieList" ></h1>
+    <h1 class="logo">
+      <img src=${IMAGE_URL.LOGO} alt="MovieList" >
+    </h1>
     `;
     __privateMethod(this, _Header_instances, bindLogoClickEvent_fn).call(this);
     const searchBarWrapper = document.createElement("div");
     searchBarWrapper.className = "header__searchbar";
-    searchBarWrapper.appendChild(__privateGet(this, _searchBar).element);
+    searchBarWrapper.appendChild(new SearchBar().element);
     __privateGet(this, _container10).appendChild(searchBarWrapper);
   }
 }
 _container10 = new WeakMap();
-_searchBar = new WeakMap();
 _Header_instances = new WeakSet();
 bindLogoClickEvent_fn = function() {
-  const logo = __privateGet(this, _container10).querySelector(".logo img");
-  if (logo) {
-    logo.addEventListener("click", () => {
+  const $logo = $({ root: __privateGet(this, _container10), selector: ".logo" });
+  if ($logo) {
+    $logo.addEventListener("click", () => {
       redirectToPage("/");
     });
   }
@@ -637,7 +656,7 @@ class Layout {
     __privateGet(this, _container11).appendChild(__privateGet(this, _header).element);
     __privateGet(this, _container11).appendChild(__privateGet(this, _contentContainer));
     __privateGet(this, _container11).appendChild(__privateGet(this, _footer2).element);
-    (_a = document.querySelector("body")) == null ? void 0 : _a.appendChild(__privateGet(this, _container11));
+    (_a = $({ selector: "body" })) == null ? void 0 : _a.appendChild(__privateGet(this, _container11));
     this.render();
   }
   get element() {
@@ -651,6 +670,6 @@ _container11 = new WeakMap();
 _header = new WeakMap();
 _footer2 = new WeakMap();
 _contentContainer = new WeakMap();
-addEventListener("load", () => {
+window.addEventListener("load", () => {
   new Layout();
 });
