@@ -6,7 +6,7 @@ var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read fr
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
-var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _MainBanner_instances, detailButtonElement_fn, _container2, _data2, _MovieItem_instances, matchImgUrl_fn, _bindEvents, _container3, _errorMessage, _container4, _movieItems, _listElement, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _movieGrid, _MainPage_instances, renderGridMovies_fn, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, _loadMoreData, _onScroll, bindInfiniteScrollEvent_fn, _container7, _movieListData2, _newMovies, _isLoading2, _query, _currentPage2, _totalPage, _movieGrid2, _SearchPage_instances, renderGridMovies_fn2, movieGridElement_fn2, _loadMoreData2, titleElement_fn2, _onScroll2, bindInfiniteScrollEvent_fn2, _container8, _STORAGE_KEY, _container9, _starRating, _rate, _movieId, _ModalStar_instances, render_fn, calculateRate_fn, bindClickEvent_fn, updateState_fn, updateRate_fn, updateComent_fn, _container10, _movieData, _Modal_instances, renderModalContent_fn, _bindMovieClickedEvent, _bindCloseButton, _bindESCEvent, _bindClickBarckDrop, _currentPage3, _modal, _container11, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindFromEvent_fn, search_fn, bindEvent_fn, _container12, _Header_instances, bindLogoClickEvent_fn, _container13, _header, _footer2, _contentContainer;
+var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _MainBanner_instances, detailButtonElement_fn, _container2, _data2, _MovieItem_instances, matchImgUrl_fn, _bindEvents, _container3, _errorMessage, _container4, _movieItems, _listElement, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _movieGrid, _MainPage_instances, renderGridMovies_fn, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, _loadMoreData, _onScroll, bindInfiniteScrollEvent_fn, _container7, _movieListData2, _newMovies, _isLoading2, _query, _currentPage2, _totalPage, _movieGrid2, _SearchPage_instances, renderGridMovies_fn2, movieGridElement_fn2, _loadMoreData2, titleElement_fn2, _onScroll2, bindInfiniteScrollEvent_fn2, _container8, _STORAGE_KEY, _container9, _starRating, _rate, _movieId, _ModalStar_instances, render_fn, calculateRate_fn, bindClickEvent_fn, updateState_fn, updateRate_fn, updateComent_fn, _container10, _movieData, _isLoading3, _Modal_instances, renderModalContent_fn, appendStars_fn, _bindMovieClickedEvent, _bindCloseButton, _bindESCEvent, _bindClickBarckDrop, fetchMovieDetails_fn, _currentPage3, _modal, _container11, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindFromEvent_fn, search_fn, bindEvent_fn, _container12, _Header_instances, bindLogoClickEvent_fn, _container13, _header, _footer2, _contentContainer;
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -646,6 +646,8 @@ class LocalStorage {
 }
 _STORAGE_KEY = new WeakMap();
 __privateAdd(LocalStorage, _STORAGE_KEY, "movies");
+const modalLoadingTemplate = `
+<div class="loading-spinner"></div>`;
 class ModalStar {
   constructor(movieId, userRating = ["empty", "empty", "empty", "empty", "empty"]) {
     __privateAdd(this, _ModalStar_instances);
@@ -719,6 +721,7 @@ class Modal {
     __privateAdd(this, _Modal_instances);
     __privateAdd(this, _container10);
     __privateAdd(this, _movieData);
+    __privateAdd(this, _isLoading3, true);
     __privateAdd(this, _bindMovieClickedEvent, () => {
       document.addEventListener("movie-clicked", (e) => {
         const customEvent = e;
@@ -753,18 +756,15 @@ class Modal {
     __privateGet(this, _bindESCEvent).call(this);
   }
   async openModal(movieData) {
+    __privateSet(this, _isLoading3, true);
+    __privateMethod(this, _Modal_instances, renderModalContent_fn).call(this);
+    __privateGet(this, _container10).classList.add("active");
     document.body.style.overflow = "hidden";
-    __privateSet(this, _movieData, movieData);
-    const movieDetails = await extractedMovieDetails(movieData.id);
-    const stored = {
-      ...movieDetails,
-      userRating: LocalStorage.getMovieStarById(movieData.id)
-    };
-    LocalStorage.saveMovie(stored);
+    const movieDetails = await __privateMethod(this, _Modal_instances, fetchMovieDetails_fn).call(this, movieData);
+    __privateSet(this, _isLoading3, false);
     __privateMethod(this, _Modal_instances, renderModalContent_fn).call(this, movieDetails);
     __privateGet(this, _bindCloseButton).call(this);
     __privateGet(this, _bindClickBarckDrop).call(this);
-    __privateGet(this, _container10).classList.add("active");
   }
   closeModal() {
     const modalBackground = $({ selector: "#modalBackground" });
@@ -778,8 +778,13 @@ class Modal {
 }
 _container10 = new WeakMap();
 _movieData = new WeakMap();
+_isLoading3 = new WeakMap();
 _Modal_instances = new WeakSet();
 renderModalContent_fn = function(movieDetails) {
+  if (__privateGet(this, _isLoading3)) {
+    __privateGet(this, _container10).innerHTML = modalLoadingTemplate;
+    return;
+  }
   __privateGet(this, _container10).innerHTML = `
       <div class="modal">
         <button class="close-modal" id="closeModal">
@@ -801,6 +806,9 @@ renderModalContent_fn = function(movieDetails) {
         </div>
       </div>
     `;
+  __privateMethod(this, _Modal_instances, appendStars_fn).call(this);
+};
+appendStars_fn = function() {
   const starSection = $({ root: __privateGet(this, _container10), selector: "section" });
   const savedStars = LocalStorage.getMovieStarById(__privateGet(this, _movieData).id);
   const modalStar = new ModalStar(__privateGet(this, _movieData).id, savedStars);
@@ -810,6 +818,16 @@ _bindMovieClickedEvent = new WeakMap();
 _bindCloseButton = new WeakMap();
 _bindESCEvent = new WeakMap();
 _bindClickBarckDrop = new WeakMap();
+fetchMovieDetails_fn = async function(movieData) {
+  __privateSet(this, _movieData, movieData);
+  const movieDetails = await extractedMovieDetails(movieData.id);
+  const stored = {
+    ...movieDetails,
+    userRating: LocalStorage.getMovieStarById(movieData.id)
+  };
+  LocalStorage.saveMovie(stored);
+  return movieDetails;
+};
 class PageRenderer {
   constructor() {
     __privateAdd(this, _currentPage3, null);
