@@ -756,7 +756,11 @@ class Modal {
     __privateAdd(this, _bindClickBarckDrop, () => {
       const $modalBackGround = $({ selector: ".modal-background" });
       if (!$modalBackGround) throw new Error("모달 백그라운드가 존재하지 않습니다.");
-      $modalBackGround.addEventListener("click", () => this.closeModal());
+      $modalBackGround.addEventListener("click", (event) => {
+        if (event.target === event.currentTarget) {
+          this.closeModal();
+        }
+      });
     });
     __privateSet(this, _container10, document.createElement("div"));
     __privateGet(this, _container10).classList.add("modal-background");
@@ -795,7 +799,7 @@ renderModalContent_fn = function(movieDetails) {
   __privateGet(this, _container10).innerHTML = `
       <div class="modal">
         <button class="close-modal" id="closeModal">
-          <img src="./public/close_button.png" />
+          <img src="https://h0ngju.github.io/javascript-movie-review/close_button.png" />
         </button>
         <div class="modal-container">
           <div class="modal-image">
