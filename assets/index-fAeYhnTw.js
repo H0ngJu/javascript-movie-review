@@ -45,10 +45,11 @@ var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _M
   }
 })();
 const SYSTEM_CONSTANTS = {
+  BASE_API_URL: "https://api.themoviedb.org/3",
   BASE_IMG_URL: "https://image.tmdb.org/t/p/w500",
-  SEARCH_URL: (searchValue, page) => `https://api.themoviedb.org/3/search/movie?query=${searchValue}&language=ko-KR&include_adult=false&page=${page}`,
-  MAIN_URL: (page) => `https://api.themoviedb.org/3/movie/popular?language=ko-KR&include_adult=false&page=${page}`,
-  DETAIL_URL: (id) => `https://api.themoviedb.org/3/movie/${id}?language=ko-KR`
+  SEARCH_URL: (searchValue, page) => `/search/movie?query=${searchValue}&language=ko-KR&include_adult=false&page=${page}`,
+  MAIN_URL: (page) => `/movie/popular?language=ko-KR&include_adult=false&page=${page}`,
+  DETAIL_URL: (id) => `/movie/${id}?language=ko-KR`
 };
 const IMAGE_URL = {
   LOGO: `${"/javascript-movie-review/"}logo.png`,
@@ -285,76 +286,59 @@ class Title {
 }
 _container5 = new WeakMap();
 _text = new WeakMap();
+class APIClient {
+  static async get(url) {
+    try {
+      const response = await fetch(SYSTEM_CONSTANTS.BASE_API_URL + url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDFlZjU1NDhlYjJhMzcxNGVlZGU4ZDlhOTc5OTM4YiIsIm5iZiI6MTc0MjI3ODcxOC43OTIsInN1YiI6IjY3ZDkxMDNlYzUzMzllYWJjNjM2NTUxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MWyqHYcKklHJtdt77FdqeixOePsLny3siiYW-VRDsIk"}`
+        }
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        const message = STATUS_CODE_MESSAGE[response.status] || `${response.status} 에러가 발생했습니다.`;
+        throw new Error(message);
+      }
+      return data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+}
 async function extractedData(url) {
-  const movieList = await fetchMovieList(url);
-  const movieListData = movieList.results.map((movieItem) => ({
-    id: movieItem.id,
-    title: movieItem.title,
-    imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${movieItem.poster_path}`,
-    score: Number(movieItem.vote_average.toFixed(1)),
-    overview: movieItem.overview
-  }));
-  const totalPage = movieList.total_pages;
-  return { movieListData, totalPage };
+  try {
+    const movieList = await APIClient.get(url);
+    const movieListData = movieList.results.map((movieItem) => ({
+      id: movieItem.id,
+      title: movieItem.title,
+      imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${movieItem.poster_path}`,
+      score: Number(movieItem.vote_average.toFixed(1)),
+      overview: movieItem.overview
+    }));
+    return { movieListData, totalPage: movieList.total_pages };
+  } catch (error) {
+    redirectToPage("/error");
+    throw error;
+  }
 }
 async function extractedMovieDetails(id) {
-  const details = await fetchMovieDetail(SYSTEM_CONSTANTS.DETAIL_URL(id));
-  return {
-    id: details.id,
-    title: details.title,
-    imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${details.poster_path}`,
-    score: Number(details.vote_average.toFixed(1)),
-    overview: details.overview,
-    genres: details.genres.map((genre) => genre.name).join(", "),
-    release_date: details.release_date.split("-")[0]
-  };
-}
-function fetchErrorHandler(error) {
-  redirectToPage("/error");
-  throw new Error(`${error.message} 에러가 발생했습니다.`);
-}
-async function fetchMovieList(url) {
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDFlZjU1NDhlYjJhMzcxNGVlZGU4ZDlhOTc5OTM4YiIsIm5iZiI6MTc0MjI3ODcxOC43OTIsInN1YiI6IjY3ZDkxMDNlYzUzMzllYWJjNjM2NTUxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MWyqHYcKklHJtdt77FdqeixOePsLny3siiYW-VRDsIk"}`
-    }
-  };
   try {
-    const response = await fetch(url, options);
-    if (!response.ok) errorHandlerByStatusCode(response.status);
-    const responsedData = await response.json();
-    return responsedData;
+    const details = await APIClient.get(SYSTEM_CONSTANTS.DETAIL_URL(id));
+    return {
+      id: details.id,
+      title: details.title,
+      imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${details.poster_path}`,
+      score: Number(details.vote_average.toFixed(1)),
+      overview: details.overview,
+      genres: details.genres.map((genre) => genre.name).join(", "),
+      release_date: details.release_date.split("-")[0]
+    };
   } catch (error) {
-    if (error instanceof Error) {
-      fetchErrorHandler(error);
-    }
+    redirectToPage("/error");
+    throw error;
   }
-}
-async function fetchMovieDetail(url) {
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDFlZjU1NDhlYjJhMzcxNGVlZGU4ZDlhOTc5OTM4YiIsIm5iZiI6MTc0MjI3ODcxOC43OTIsInN1YiI6IjY3ZDkxMDNlYzUzMzllYWJjNjM2NTUxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MWyqHYcKklHJtdt77FdqeixOePsLny3siiYW-VRDsIk"}`
-    }
-  };
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) errorHandlerByStatusCode(response.status);
-    const responsedData = await response.json();
-    return responsedData;
-  } catch (error) {
-    if (error instanceof Error) {
-      fetchErrorHandler(error);
-    }
-  }
-}
-function errorHandlerByStatusCode(statusCode) {
-  const errorMessage = STATUS_CODE_MESSAGE[statusCode] ?? `${statusCode} 에러가 발생했습니다.`;
-  redirectToPage("/error");
-  throw new Error(errorMessage);
 }
 const $ = ({ root = document, selector }) => {
   return root.querySelector(selector);
