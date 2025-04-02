@@ -1,12 +1,15 @@
+var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
 };
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
 var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
-var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _MainBanner_instances, detailButtonElement_fn, _container2, _data2, _MovieItem_instances, matchImgUrl_fn, _bindEvents, _container3, _errorMessage, _container4, _movieItems, _listElement, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _movieGrid, _MainPage_instances, renderGridMovies_fn, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, _loadMoreData, _onScroll, bindInfiniteScrollEvent_fn, _container7, _movieListData2, _newMovies, _isLoading2, _query, _currentPage2, _totalPage, _movieGrid2, _SearchPage_instances, renderGridMovies_fn2, movieGridElement_fn2, _loadMoreData2, titleElement_fn2, _onScroll2, bindInfiniteScrollEvent_fn2, _container8, _STORAGE_KEY, _container9, _starRating, _rate, _movieId, _ModalStar_instances, render_fn, calculateRate_fn, bindClickEvent_fn, updateState_fn, updateRate_fn, updateComent_fn, _container10, _movieData, _isLoading3, _Modal_instances, renderModalContent_fn, appendStars_fn, _bindMovieClickedEvent, _bindCloseButton, _bindESCEvent, _bindClickBarckDrop, fetchMovieDetails_fn, _currentPage3, _modal, _container11, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindFromEvent_fn, search_fn, bindEvent_fn, _container12, _Header_instances, bindLogoClickEvent_fn, _container13, _header, _footer2, _contentContainer;
+var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _MainBanner_instances, detailButtonElement_fn, _container2, _errorMessage, _container3, _data2, _MovieItem_instances, matchImgUrl_fn, _bindEvents, _container4, _movieItems, _listElement, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _movieGrid, _MainPage_instances, renderGridMovies_fn, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, _loadMoreData, _onScroll, bindInfiniteScrollEvent_fn, _container7, _movieListData2, _newMovies, _isLoading2, _query, _currentPage2, _totalPage, _movieGrid2, _SearchPage_instances, renderGridMovies_fn2, movieGridElement_fn2, _loadMoreData2, titleElement_fn2, _onScroll2, bindInfiniteScrollEvent_fn2, _container8, _STORAGE_KEY, _userRating, _container9, _rating, _movieId, _ModalStar_instances, render_fn, renderStar_fn, bindClickEvent_fn, _container10, _movieData, _isLoading3, _modalStar, _Modal_instances, renderModalContent_fn, appendStars_fn, _bindMovieClickedEvent, _bindCloseButton, _bindESCEvent, _bindClickBarckDrop, fetchMovieDetails_fn, _currentPage3, _container11, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindFromEvent_fn, search_fn, bindEvent_fn, _container12, _Header_instances, bindLogoClickEvent_fn, _container13, _header, _footer2, _contentContainer;
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -146,52 +149,6 @@ detailButtonElement_fn = function() {
   const buttonContainer = __privateGet(this, _container).querySelector(".main-banner__button");
   buttonContainer == null ? void 0 : buttonContainer.appendChild(__privateGet(this, _detailButton).element);
 };
-class MovieItem {
-  constructor({ data }) {
-    __privateAdd(this, _MovieItem_instances);
-    __privateAdd(this, _container2);
-    __privateAdd(this, _data2);
-    __privateAdd(this, _bindEvents, () => {
-      __privateGet(this, _container2).addEventListener("click", () => {
-        const event = new CustomEvent("movie-clicked", {
-          detail: __privateGet(this, _data2),
-          bubbles: true
-        });
-        __privateGet(this, _container2).dispatchEvent(event);
-      });
-    });
-    __privateSet(this, _container2, document.createElement("li"));
-    __privateSet(this, _data2, data);
-    this.render();
-    __privateGet(this, _bindEvents).call(this);
-  }
-  render() {
-    __privateGet(this, _container2).innerHTML = `
-      <div class="item">
-        <img class="thumbnail" src=${__privateMethod(this, _MovieItem_instances, matchImgUrl_fn).call(this)} alt=${__privateGet(this, _data2).title}/>
-        <div class="item-desc">
-          <p class="rate">
-            <img src="https://h0ngju.github.io/javascript-movie-review/star_empty.png" class="star" />
-            <span>${__privateGet(this, _data2).score}</span>
-          </p>
-          <strong class = 'text-body'>${__privateGet(this, _data2).title}</strong>
-        </div>
-      </div>`;
-  }
-  get element() {
-    return __privateGet(this, _container2);
-  }
-}
-_container2 = new WeakMap();
-_data2 = new WeakMap();
-_MovieItem_instances = new WeakSet();
-matchImgUrl_fn = function() {
-  if (__privateGet(this, _data2).imgUrl.includes("null")) {
-    return "https://h0ngju.github.io/javascript-movie-review/empty-item.png";
-  }
-  return __privateGet(this, _data2).imgUrl;
-};
-_bindEvents = new WeakMap();
 const ERROR_MESSAGE = {
   NO_RESULT: "저런! 검색 결과가 없네요 😅",
   FETCH_FAILED: "서버에서 데이터를 불러 오는데 실패했어요 😭"
@@ -206,15 +163,15 @@ const STATUS_CODE_MESSAGE = {
 };
 class ErrorMessage {
   constructor({ errorMessage }) {
-    __privateAdd(this, _container3);
+    __privateAdd(this, _container2);
     __privateAdd(this, _errorMessage);
-    __privateSet(this, _container3, document.createElement("div"));
-    __privateGet(this, _container3).classList.add("empty-result");
+    __privateSet(this, _container2, document.createElement("div"));
+    __privateGet(this, _container2).classList.add("empty-result");
     __privateSet(this, _errorMessage, errorMessage);
     this.render();
   }
   render() {
-    __privateGet(this, _container3).innerHTML = `
+    __privateGet(this, _container2).innerHTML = `
     <img src="https://h0ngju.github.io/javascript-movie-review/no-result.png" alt="으아아 행성이"/>
     <p class="text-subtitle">${__privateGet(this, _errorMessage)}</p>
   ` + (__privateGet(this, _errorMessage) === ERROR_MESSAGE.NO_RESULT ? `
@@ -223,11 +180,57 @@ class ErrorMessage {
         <p class="text-body check-text">✅ 두 단어 이상의 검색어인 경우, 띄어쓰기를 확인해 보세요.</p>` : "");
   }
   get element() {
+    return __privateGet(this, _container2);
+  }
+}
+_container2 = new WeakMap();
+_errorMessage = new WeakMap();
+class MovieItem {
+  constructor({ data }) {
+    __privateAdd(this, _MovieItem_instances);
+    __privateAdd(this, _container3);
+    __privateAdd(this, _data2);
+    __privateAdd(this, _bindEvents, () => {
+      __privateGet(this, _container3).addEventListener("click", () => {
+        const event = new CustomEvent("movie-clicked", {
+          detail: __privateGet(this, _data2),
+          bubbles: true
+        });
+        __privateGet(this, _container3).dispatchEvent(event);
+      });
+    });
+    __privateSet(this, _container3, document.createElement("li"));
+    __privateSet(this, _data2, data);
+    this.render();
+    __privateGet(this, _bindEvents).call(this);
+  }
+  render() {
+    __privateGet(this, _container3).innerHTML = `
+      <div class="item">
+        <img class="thumbnail" src=${__privateMethod(this, _MovieItem_instances, matchImgUrl_fn).call(this)} alt=${__privateGet(this, _data2).title}/>
+        <div class="item-desc">
+          <p class="rate">
+            <img src="https://h0ngju.github.io/javascript-movie-review/star_empty.png" class="star" />
+            <span>${__privateGet(this, _data2).score}</span>
+          </p>
+          <strong class = 'text-body'>${__privateGet(this, _data2).title}</strong>
+        </div>
+      </div>`;
+  }
+  get element() {
     return __privateGet(this, _container3);
   }
 }
 _container3 = new WeakMap();
-_errorMessage = new WeakMap();
+_data2 = new WeakMap();
+_MovieItem_instances = new WeakSet();
+matchImgUrl_fn = function() {
+  if (__privateGet(this, _data2).imgUrl.includes("null")) {
+    return "https://h0ngju.github.io/javascript-movie-review/empty-item.png";
+  }
+  return __privateGet(this, _data2).imgUrl;
+};
+_bindEvents = new WeakMap();
 class MovieGrid {
   constructor({ movieItems = [] }) {
     __privateAdd(this, _MovieGrid_instances);
@@ -286,60 +289,6 @@ class Title {
 }
 _container5 = new WeakMap();
 _text = new WeakMap();
-class APIClient {
-  static async get(url) {
-    try {
-      const response = await fetch(SYSTEM_CONSTANTS.BASE_API_URL + url, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDFlZjU1NDhlYjJhMzcxNGVlZGU4ZDlhOTc5OTM4YiIsIm5iZiI6MTc0MjI3ODcxOC43OTIsInN1YiI6IjY3ZDkxMDNlYzUzMzllYWJjNjM2NTUxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MWyqHYcKklHJtdt77FdqeixOePsLny3siiYW-VRDsIk"}`
-        }
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        const message = STATUS_CODE_MESSAGE[response.status] || `${response.status} 에러가 발생했습니다.`;
-        throw new Error(message);
-      }
-      return data;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
-}
-async function extractedData(url) {
-  try {
-    const movieList = await APIClient.get(url);
-    const movieListData = movieList.results.map((movieItem) => ({
-      id: movieItem.id,
-      title: movieItem.title,
-      imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${movieItem.poster_path}`,
-      score: Number(movieItem.vote_average.toFixed(1)),
-      overview: movieItem.overview
-    }));
-    return { movieListData, totalPage: movieList.total_pages };
-  } catch (error) {
-    redirectToPage("/error");
-    throw error;
-  }
-}
-async function extractedMovieDetails(id) {
-  try {
-    const details = await APIClient.get(SYSTEM_CONSTANTS.DETAIL_URL(id));
-    return {
-      id: details.id,
-      title: details.title,
-      imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${details.poster_path}`,
-      score: Number(details.vote_average.toFixed(1)),
-      overview: details.overview,
-      genres: details.genres.map((genre) => genre.name).join(", "),
-      release_date: details.release_date.split("-")[0]
-    };
-  } catch (error) {
-    redirectToPage("/error");
-    throw error;
-  }
-}
 const $ = ({ root = document, selector }) => {
   return root.querySelector(selector);
 };
@@ -388,6 +337,86 @@ const mainPageLoadingTemplate = `
     </div>
   </div>
 `;
+class APIClient {
+  constructor(baseUrl) {
+    __publicField(this, "baseUrl");
+    this.baseUrl = baseUrl;
+  }
+  async get(url) {
+    try {
+      const response = await fetch(SYSTEM_CONSTANTS.BASE_API_URL + url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDFlZjU1NDhlYjJhMzcxNGVlZGU4ZDlhOTc5OTM4YiIsIm5iZiI6MTc0MjI3ODcxOC43OTIsInN1YiI6IjY3ZDkxMDNlYzUzMzllYWJjNjM2NTUxNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MWyqHYcKklHJtdt77FdqeixOePsLny3siiYW-VRDsIk"}`
+        }
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        const message = STATUS_CODE_MESSAGE[response.status] || `${response.status} 에러가 발생했습니다.`;
+        throw new Error(message);
+      }
+      return data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+}
+function convertToMovieData(movieitem) {
+  return {
+    id: movieitem.id,
+    title: movieitem.title,
+    imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${movieitem.poster_path}`,
+    score: Number(movieitem.vote_average.toFixed(1)),
+    overview: movieitem.overview
+  };
+}
+function convertToMovieDetailData(details) {
+  return {
+    id: details.id,
+    title: details.title,
+    imgUrl: `${SYSTEM_CONSTANTS.BASE_IMG_URL}${details.poster_path}`,
+    score: Number(details.vote_average.toFixed(1)),
+    overview: details.overview,
+    genres: details.genres.map((genre) => genre.name).join(", "),
+    release_date: details.release_date.split("-")[0]
+  };
+}
+class MovieClient extends APIClient {
+  constructor() {
+    super(SYSTEM_CONSTANTS.BASE_API_URL);
+  }
+  async getPopulareMovies(page) {
+    try {
+      const movieList = await this.get(SYSTEM_CONSTANTS.MAIN_URL(page));
+      const movieListData = movieList.results.map((movie) => convertToMovieData(movie));
+      return { movieListData, totalPage: movieList.total_pages };
+    } catch (error) {
+      redirectToPage("/error");
+      throw error;
+    }
+  }
+  async getSearchedMovies(query, page) {
+    try {
+      const movieList = await this.get(SYSTEM_CONSTANTS.SEARCH_URL(query, page));
+      const movieListData = movieList.results.map((movie) => convertToMovieData(movie));
+      return { movieListData, totalPage: movieList.total_pages };
+    } catch (error) {
+      redirectToPage("/error");
+      throw error;
+    }
+  }
+  async getMovieDetails(id) {
+    try {
+      const details = await this.get(SYSTEM_CONSTANTS.DETAIL_URL(id));
+      return convertToMovieDetailData(details);
+    } catch (error) {
+      redirectToPage("/error");
+      throw error;
+    }
+  }
+}
+const MovieClient$1 = new MovieClient();
 class MainPage {
   constructor() {
     __privateAdd(this, _MainPage_instances);
@@ -398,7 +427,7 @@ class MainPage {
     __privateAdd(this, _movieGrid, null);
     __privateAdd(this, _loadMoreData, async () => {
       __privateSet(this, _currentPage, __privateGet(this, _currentPage) + 1);
-      const { movieListData } = await extractedData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage)));
+      const { movieListData } = await MovieClient$1.getPopulareMovies(__privateGet(this, _currentPage));
       __privateSet(this, _movieListData, [...__privateGet(this, _movieListData), ...movieListData]);
       this.renderDynamicSection();
     });
@@ -415,7 +444,7 @@ class MainPage {
   async init() {
     __privateSet(this, _isLoading, true);
     this.render();
-    const { movieListData } = await extractedData(SYSTEM_CONSTANTS.MAIN_URL(__privateGet(this, _currentPage)));
+    const { movieListData } = await MovieClient$1.getPopulareMovies(__privateGet(this, _currentPage));
     __privateSet(this, _movieListData, movieListData);
     __privateSet(this, _isLoading, false);
     this.render();
@@ -521,7 +550,7 @@ class SearchPage {
     __privateAdd(this, _movieGrid2, null);
     __privateAdd(this, _loadMoreData2, async () => {
       __privateSet(this, _currentPage2, __privateGet(this, _currentPage2) + 1);
-      const { movieListData } = await extractedData(SYSTEM_CONSTANTS.SEARCH_URL(__privateGet(this, _query), __privateGet(this, _currentPage2)));
+      const { movieListData } = await MovieClient$1.getSearchedMovies(__privateGet(this, _query), __privateGet(this, _currentPage2));
       __privateSet(this, _newMovies, movieListData);
       __privateSet(this, _movieListData2, [...__privateGet(this, _movieListData2), ...movieListData]);
       this.renderDynamicSection();
@@ -544,9 +573,7 @@ class SearchPage {
     __privateSet(this, _isLoading2, true);
     this.render();
     if (__privateGet(this, _query)) {
-      const { movieListData, totalPage } = await extractedData(
-        SYSTEM_CONSTANTS.SEARCH_URL(__privateGet(this, _query), __privateGet(this, _currentPage2))
-      );
+      const { movieListData, totalPage } = await MovieClient$1.getSearchedMovies(__privateGet(this, _query), __privateGet(this, _currentPage2));
       __privateSet(this, _movieListData2, movieListData);
       __privateSet(this, _newMovies, movieListData);
       __privateSet(this, _totalPage, totalPage);
@@ -617,11 +644,13 @@ class ErrorPage {
   }
 }
 _container8 = new WeakMap();
+const modalLoadingTemplate = `
+<div class="loading-spinner"></div>`;
 class LocalStorage {
   static getMovies() {
     const storedData = localStorage.getItem(__privateGet(this, _STORAGE_KEY));
+    if (!storedData) return [];
     try {
-      if (!storedData) return [];
       const parsedData = JSON.parse(storedData);
       return parsedData;
     } catch (error) {
@@ -634,94 +663,105 @@ class LocalStorage {
     const updatedList = [...filteredList, movie];
     localStorage.setItem(__privateGet(this, _STORAGE_KEY), JSON.stringify(updatedList));
   }
-  static updateMovieStarById(id, stars) {
-    const movies = this.getMovies();
-    const updatedMovies = movies.map((movie) => movie.id === id ? { ...movie, userRating: stars } : movie);
-    localStorage.setItem(__privateGet(this, _STORAGE_KEY), JSON.stringify(updatedMovies));
-  }
   static getMovieStarById(id) {
     var _a;
-    return ((_a = this.getMovies().find((m) => m.id === id)) == null ? void 0 : _a.userRating) || ["empty", "empty", "empty", "empty", "empty"];
+    return ((_a = this.getMovies().find((m) => m.id === id)) == null ? void 0 : _a.userRating) || 0;
   }
 }
 _STORAGE_KEY = new WeakMap();
 __privateAdd(LocalStorage, _STORAGE_KEY, "movies");
-const modalLoadingTemplate = `
-<div class="loading-spinner"></div>`;
+class Rating {
+  constructor(userRating = 0) {
+    __privateAdd(this, _userRating);
+    __privateSet(this, _userRating, userRating);
+  }
+  get userRating() {
+    return __privateGet(this, _userRating);
+  }
+  get score() {
+    return __privateGet(this, _userRating) * 2;
+  }
+  get comment() {
+    const COMMENT = {
+      0: "영화 어떻게 보셨나요?",
+      2: "최악이에요",
+      4: "별로에요",
+      6: "보통이에요",
+      8: "재미있어요",
+      10: "명작이에요"
+    };
+    return COMMENT[this.score] || "";
+  }
+  update(newRating) {
+    __privateSet(this, _userRating, newRating);
+  }
+}
+_userRating = new WeakMap();
 class ModalStar {
-  constructor(movieId, userRating = ["empty", "empty", "empty", "empty", "empty"]) {
+  constructor(movieId) {
     __privateAdd(this, _ModalStar_instances);
     __privateAdd(this, _container9);
-    __privateAdd(this, _starRating);
-    __privateAdd(this, _rate);
+    __privateAdd(this, _rating);
     __privateAdd(this, _movieId);
-    __privateSet(this, _starRating, userRating);
     __privateSet(this, _movieId, movieId);
-    __privateSet(this, _rate, __privateMethod(this, _ModalStar_instances, updateRate_fn).call(this));
+    const savedRating = LocalStorage.getMovieStarById(__privateGet(this, _movieId));
+    __privateSet(this, _rating, new Rating(savedRating));
     __privateSet(this, _container9, document.createElement("div"));
-    __privateGet(this, _container9).classList.add("modal-star-container");
+    __privateGet(this, _container9).classList.add("modal-star-description");
     __privateMethod(this, _ModalStar_instances, render_fn).call(this);
     __privateMethod(this, _ModalStar_instances, bindClickEvent_fn).call(this);
   }
   get element() {
     return __privateGet(this, _container9);
   }
+  getUserRating() {
+    return __privateGet(this, _rating).userRating;
+  }
 }
 _container9 = new WeakMap();
-_starRating = new WeakMap();
-_rate = new WeakMap();
+_rating = new WeakMap();
 _movieId = new WeakMap();
 _ModalStar_instances = new WeakSet();
 render_fn = function() {
   __privateGet(this, _container9).innerHTML = `
       <div class="text-body">내 별점</div>
-      ${__privateGet(this, _starRating).map(
-    (starRating, index) => `
-          <img 
-            src="https://h0ngju.github.io/javascript-movie-review/star_${starRating}.png"
-            class="modal-star"
-            data-index="${index}"
-          />`
-  ).join("")}
-      <div class="text-body review">${__privateMethod(this, _ModalStar_instances, updateComent_fn).call(this)}</div>
-      <div class="text-body">(${__privateGet(this, _rate)}/10)</div>
+      <div class="modal-star-container">${__privateMethod(this, _ModalStar_instances, renderStar_fn).call(this)}</div>
+      <div class="text-body review">${__privateGet(this, _rating).comment}</div>
+      <div class="text-body">(${__privateGet(this, _rating).score}/10)</div>
     `;
 };
-calculateRate_fn = function() {
-  return __privateGet(this, _starRating).filter((star) => star === "filled").length * 2;
+renderStar_fn = function() {
+  return Array.from({ length: 5 }, (_, i) => {
+    const starValue = i + 1;
+    const starType = starValue <= __privateGet(this, _rating).userRating ? "filled" : "empty";
+    return `
+        <img 
+          src="https://h0ngju.github.io/javascript-movie-review/star_${starType}.png"
+          class="modal-star"
+          data-value="${starValue}"
+        />
+      `;
+  }).join("");
 };
 bindClickEvent_fn = function() {
   __privateGet(this, _container9).addEventListener("click", (e) => {
+    if (!(e.target instanceof HTMLElement)) {
+      throw new Error("이벤트 요소가 HTMLElement가 아닙니다.");
+    }
     const target = e.target;
     if (!target.classList.contains("modal-star")) throw new Error("별점을 찾을 수 없습니다.");
-    const index = Number(target.dataset.index);
-    __privateSet(this, _rate, (index + 1) * 2);
-    __privateMethod(this, _ModalStar_instances, updateState_fn).call(this, index + 1);
-    LocalStorage.updateMovieStarById(__privateGet(this, _movieId), __privateGet(this, _starRating));
+    const newRating = Number(e.target.dataset.value);
+    __privateGet(this, _rating).update(newRating);
     __privateMethod(this, _ModalStar_instances, render_fn).call(this);
   });
-};
-updateState_fn = function(filledCount) {
-  __privateSet(this, _starRating, __privateGet(this, _starRating).map((_, i) => i < filledCount ? "filled" : "empty"));
-};
-updateRate_fn = function() {
-  return __privateSet(this, _rate, __privateMethod(this, _ModalStar_instances, calculateRate_fn).call(this));
-};
-updateComent_fn = function() {
-  if (__privateGet(this, _rate) === 0) return "영화 어떻게 보셨나요?";
-  if (__privateGet(this, _rate) === 2) return "최악이에요";
-  if (__privateGet(this, _rate) === 4) return "별로에요";
-  if (__privateGet(this, _rate) === 6) return "보통이에요";
-  if (__privateGet(this, _rate) === 8) return "재미있어요";
-  if (__privateGet(this, _rate) === 10) return "명작이에요";
-  return "";
 };
 class Modal {
   constructor() {
     __privateAdd(this, _Modal_instances);
     __privateAdd(this, _container10);
-    __privateAdd(this, _movieData);
+    __privateAdd(this, _movieData, null);
     __privateAdd(this, _isLoading3, true);
+    __privateAdd(this, _modalStar, null);
     __privateAdd(this, _bindMovieClickedEvent, () => {
       document.addEventListener("movie-clicked", (e) => {
         const customEvent = e;
@@ -769,6 +809,14 @@ class Modal {
   closeModal() {
     const modalBackground = $({ selector: "#modalBackground" });
     if (!modalBackground) throw Error("모달이 존재하지 않습니다.");
+    if (!__privateGet(this, _modalStar)) throw Error("modalStar를 찾을 수 없습니다.");
+    if (!__privateGet(this, _movieData)) throw Error("movieData 찾을 수 없습니다.");
+    const userRating = __privateGet(this, _modalStar).getUserRating();
+    const updatedMovie = {
+      ...__privateGet(this, _movieData),
+      userRating
+    };
+    LocalStorage.saveMovie(updatedMovie);
     modalBackground.classList.remove("active");
     document.body.style.overflow = "";
   }
@@ -779,12 +827,14 @@ class Modal {
 _container10 = new WeakMap();
 _movieData = new WeakMap();
 _isLoading3 = new WeakMap();
+_modalStar = new WeakMap();
 _Modal_instances = new WeakSet();
 renderModalContent_fn = function(movieDetails) {
   if (__privateGet(this, _isLoading3)) {
     __privateGet(this, _container10).innerHTML = modalLoadingTemplate;
     return;
   }
+  if (!movieDetails) throw new Error("영화 데이터가 존재하지 않습니다.");
   __privateGet(this, _container10).innerHTML = `
       <div class="modal">
         <button class="close-modal" id="closeModal">
@@ -799,7 +849,7 @@ renderModalContent_fn = function(movieDetails) {
             <p class="category">${movieDetails.release_date} ${movieDetails.genres}</p>
             <p class="rate"><img src="https://h0ngju.github.io/javascript-movie-review/star_filled.png" class="modal-rate-star" /><span>${movieDetails.score}</span></p>
             <hr />
-            <section></section>
+            <section class="modal-star-section"></section>
             <hr/>
             <p class="detail">${movieDetails.overview}</p>
           </div>
@@ -809,29 +859,23 @@ renderModalContent_fn = function(movieDetails) {
   __privateMethod(this, _Modal_instances, appendStars_fn).call(this);
 };
 appendStars_fn = function() {
-  const starSection = $({ root: __privateGet(this, _container10), selector: "section" });
-  const savedStars = LocalStorage.getMovieStarById(__privateGet(this, _movieData).id);
-  const modalStar = new ModalStar(__privateGet(this, _movieData).id, savedStars);
-  starSection == null ? void 0 : starSection.appendChild(modalStar.element);
+  const starSection = $({ root: __privateGet(this, _container10), selector: ".modal-star-section" });
+  if (!__privateGet(this, _movieData)) throw new Error("영화 데이터가 존재하지 않습니다.");
+  __privateSet(this, _modalStar, new ModalStar(__privateGet(this, _movieData).id));
+  starSection == null ? void 0 : starSection.appendChild(__privateGet(this, _modalStar).element);
 };
 _bindMovieClickedEvent = new WeakMap();
 _bindCloseButton = new WeakMap();
 _bindESCEvent = new WeakMap();
 _bindClickBarckDrop = new WeakMap();
 fetchMovieDetails_fn = async function(movieData) {
-  __privateSet(this, _movieData, movieData);
-  const movieDetails = await extractedMovieDetails(movieData.id);
-  const stored = {
-    ...movieDetails,
-    userRating: LocalStorage.getMovieStarById(movieData.id)
-  };
-  LocalStorage.saveMovie(stored);
+  const movieDetails = await MovieClient$1.getMovieDetails(movieData.id);
+  __privateSet(this, _movieData, movieDetails);
   return movieDetails;
 };
 class PageRenderer {
   constructor() {
     __privateAdd(this, _currentPage3, null);
-    __privateAdd(this, _modal, new Modal());
   }
   render({ $container, Page }) {
     var _a;
@@ -841,12 +885,11 @@ class PageRenderer {
     $container.innerHTML = "";
     Page.element.classList.add("render-content");
     $container.appendChild(Page.element);
-    $container.appendChild(__privateGet(this, _modal).element);
+    $container.appendChild(new Modal().element);
     __privateSet(this, _currentPage3, Page);
   }
 }
 _currentPage3 = new WeakMap();
-_modal = new WeakMap();
 const renderer = new PageRenderer();
 const routes = {
   "/": () => new MainPage(),

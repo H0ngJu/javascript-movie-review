@@ -1,5 +1,6 @@
 .searchbar {
   max-width: 525px;
+  min-width: 220px;
   width: 50%;
   padding: 6px 16px;
   border: 2px solid var(--color-gray-300);
@@ -19,6 +20,7 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
+  display: block;
 }
 
 .searchbar__button {
@@ -268,6 +270,17 @@ p.rate > span {
   top: 1px;
 }
 
+.thumbnail-list li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item strong {
+  display: inline-block;
+  max-width: 200px;
+}
+
 .button--small {
   width: 100px;
 }
@@ -283,6 +296,7 @@ p.rate > span {
   grid-template-columns: repeat(5, 1fr);
   gap: 70px;
   padding: 20px;
+  align-items: center;
 }
 
 @media (max-width: 1024px) {
@@ -388,7 +402,14 @@ p.rate > span {
   display: inline-flex;
   flex-direction: column;
   gap: 10px;
-  margin: 90px;
+  margin-top: 140px;
+  margin-left: 90px;
+}
+
+@media (max-width: 768px) {
+  .main-banner__info {
+    margin-left: 40px;
+  }
 }
 
 .main-banner__image {
@@ -539,7 +560,6 @@ body.modal-open {
 .modal-description {
   width: auto;
   padding: 8px;
-  margin-left: 16px;
   line-height: 1.6rem;
 }
 
@@ -573,10 +593,14 @@ body.modal-open {
   cursor: pointer;
 }
 
-.modal-star-container {
+.modal-star-description {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.modal-star-container {
+  display: flex;
 }
 
 @media (max-width: 1024px) {
@@ -617,6 +641,10 @@ body.modal-open {
 @media (max-width: 480px) {
   .modal-image {
     display: none;
+  }
+
+  .modal-star-description {
+    flex-direction: column;
   }
 }
 
