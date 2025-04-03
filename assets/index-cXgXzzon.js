@@ -9,7 +9,7 @@ var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read fr
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
-var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _MainBanner_instances, detailButtonElement_fn, _container2, _errorMessage, _container3, _data2, _MovieItem_instances, matchImgUrl_fn, _bindEvents, _container4, _movieItems, _listElement, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _movieGrid, _MainPage_instances, renderGridMovies_fn, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, _loadMoreData, _onScroll, bindInfiniteScrollEvent_fn, _container7, _movieListData2, _newMovies, _isLoading2, _query, _currentPage2, _totalPage, _movieGrid2, _SearchPage_instances, renderGridMovies_fn2, movieGridElement_fn2, _loadMoreData2, titleElement_fn2, _onScroll2, bindInfiniteScrollEvent_fn2, _container8, _STORAGE_KEY, _userRating, _container9, _rating, _movieId, _ModalStar_instances, render_fn, renderStar_fn, bindClickEvent_fn, _container10, _movieData, _isLoading3, _modalStar, _Modal_instances, renderModalContent_fn, appendStars_fn, _bindMovieClickedEvent, _bindCloseButton, _bindESCEvent, _bindClickBarckDrop, fetchMovieDetails_fn, _currentPage3, _container11, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindFromEvent_fn, search_fn, bindEvent_fn, _container12, _Header_instances, bindLogoClickEvent_fn, _container13, _header, _footer2, _contentContainer;
+var _footer, _button, _onClick, _bindEvent, _container, _data, _detailButton, _MainBanner_instances, detailButtonElement_fn, _container2, _errorMessage, _container3, _data2, _MovieItem_instances, matchImgUrl_fn, _bindEvents, _container4, _movieItems, _listElement, _MovieGrid_instances, emptyListElement_fn, movieItemElements_fn, _container5, _text, _container6, _movieListData, _currentPage, _isLoading, _movieGrid, _MainPage_instances, renderGridMovies_fn, titleElement_fn, mainBannerElement_fn, movieGridElement_fn, _loadMoreData, _onScroll, bindInfiniteScrollEvent_fn, _container7, _movieListData2, _newMovies, _isLoading2, _query, _currentPage2, _totalPage, _movieGrid2, _SearchPage_instances, renderGridMovies_fn2, movieGridElement_fn2, _loadMoreData2, titleElement_fn2, _onScroll2, bindInfiniteScrollEvent_fn2, _container8, _STORAGE_KEY, _userRating, _container9, _rating, _movieData, _ModalStar_instances, render_fn, renderStar_fn, bindClickEvent_fn, saveLocalStorage_fn, _container10, _movieData2, _isLoading3, _modalStar, _Modal_instances, renderModalContent_fn, appendStars_fn, _bindMovieClickedEvent, _bindCloseButton, _bindESCEvent, _bindClickBarckDrop, fetchMovieDetails_fn, _currentPage3, _container11, _searchValue, _SearchBar_instances, bindInputEvent_fn, bindFromEvent_fn, search_fn, bindEvent_fn, _container12, _Header_instances, bindLogoClickEvent_fn, _container13, _header, _footer2, _contentContainer;
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -52,7 +52,8 @@ const SYSTEM_CONSTANTS = {
   BASE_IMG_URL: "https://image.tmdb.org/t/p/w500",
   SEARCH_URL: (searchValue, page) => `/search/movie?query=${searchValue}&language=ko-KR&include_adult=false&page=${page}`,
   MAIN_URL: (page) => `/movie/popular?language=ko-KR&include_adult=false&page=${page}`,
-  DETAIL_URL: (id) => `/movie/${id}?language=ko-KR`
+  DETAIL_URL: (id) => `/movie/${id}?language=ko-KR`,
+  MOVIES_PER_PAGE: 20
 };
 const IMAGE_URL = {
   LOGO: `${"/javascript-movie-review/"}logo.png`,
@@ -292,7 +293,7 @@ _text = new WeakMap();
 const $ = ({ root = document, selector }) => {
   return root.querySelector(selector);
 };
-const skeletonItems$1 = Array(20).fill("").map(
+const skeletonItems$1 = Array(SYSTEM_CONSTANTS.MOVIES_PER_PAGE).fill("").map(
   () => `
   <li>
     <div class="item">
@@ -504,7 +505,7 @@ _onScroll = new WeakMap();
 bindInfiniteScrollEvent_fn = function() {
   window.addEventListener("scroll", __privateGet(this, _onScroll));
 };
-const skeletonItems = Array(20).fill("").map(
+const skeletonItems = Array(SYSTEM_CONSTANTS.MOVIES_PER_PAGE).fill("").map(
   () => `
   <li>
     <div class="item">
@@ -698,13 +699,13 @@ class Rating {
 }
 _userRating = new WeakMap();
 class ModalStar {
-  constructor(movieId) {
+  constructor(movieData) {
     __privateAdd(this, _ModalStar_instances);
     __privateAdd(this, _container9);
     __privateAdd(this, _rating);
-    __privateAdd(this, _movieId);
-    __privateSet(this, _movieId, movieId);
-    const savedRating = LocalStorage.getMovieStarById(__privateGet(this, _movieId));
+    __privateAdd(this, _movieData);
+    __privateSet(this, _movieData, movieData);
+    const savedRating = LocalStorage.getMovieStarById(__privateGet(this, _movieData).id);
     __privateSet(this, _rating, new Rating(savedRating));
     __privateSet(this, _container9, document.createElement("div"));
     __privateGet(this, _container9).classList.add("modal-star-description");
@@ -714,13 +715,10 @@ class ModalStar {
   get element() {
     return __privateGet(this, _container9);
   }
-  getUserRating() {
-    return __privateGet(this, _rating).userRating;
-  }
 }
 _container9 = new WeakMap();
 _rating = new WeakMap();
-_movieId = new WeakMap();
+_movieData = new WeakMap();
 _ModalStar_instances = new WeakSet();
 render_fn = function() {
   __privateGet(this, _container9).innerHTML = `
@@ -752,14 +750,22 @@ bindClickEvent_fn = function() {
     if (!target.classList.contains("modal-star")) throw new Error("별점을 찾을 수 없습니다.");
     const newRating = Number(e.target.dataset.value);
     __privateGet(this, _rating).update(newRating);
+    __privateMethod(this, _ModalStar_instances, saveLocalStorage_fn).call(this);
     __privateMethod(this, _ModalStar_instances, render_fn).call(this);
   });
+};
+saveLocalStorage_fn = function() {
+  const updatedMovie = {
+    ...__privateGet(this, _movieData),
+    userRating: __privateGet(this, _rating).userRating
+  };
+  LocalStorage.saveMovie(updatedMovie);
 };
 class Modal {
   constructor() {
     __privateAdd(this, _Modal_instances);
     __privateAdd(this, _container10);
-    __privateAdd(this, _movieData, null);
+    __privateAdd(this, _movieData2, null);
     __privateAdd(this, _isLoading3, true);
     __privateAdd(this, _modalStar, null);
     __privateAdd(this, _bindMovieClickedEvent, () => {
@@ -810,13 +816,7 @@ class Modal {
     const modalBackground = $({ selector: "#modalBackground" });
     if (!modalBackground) throw Error("모달이 존재하지 않습니다.");
     if (!__privateGet(this, _modalStar)) throw Error("modalStar를 찾을 수 없습니다.");
-    if (!__privateGet(this, _movieData)) throw Error("movieData 찾을 수 없습니다.");
-    const userRating = __privateGet(this, _modalStar).getUserRating();
-    const updatedMovie = {
-      ...__privateGet(this, _movieData),
-      userRating
-    };
-    LocalStorage.saveMovie(updatedMovie);
+    if (!__privateGet(this, _movieData2)) throw Error("movieData 찾을 수 없습니다.");
     modalBackground.classList.remove("active");
     document.body.style.overflow = "";
   }
@@ -825,7 +825,7 @@ class Modal {
   }
 }
 _container10 = new WeakMap();
-_movieData = new WeakMap();
+_movieData2 = new WeakMap();
 _isLoading3 = new WeakMap();
 _modalStar = new WeakMap();
 _Modal_instances = new WeakSet();
@@ -860,8 +860,8 @@ renderModalContent_fn = function(movieDetails) {
 };
 appendStars_fn = function() {
   const starSection = $({ root: __privateGet(this, _container10), selector: ".modal-star-section" });
-  if (!__privateGet(this, _movieData)) throw new Error("영화 데이터가 존재하지 않습니다.");
-  __privateSet(this, _modalStar, new ModalStar(__privateGet(this, _movieData).id));
+  if (!__privateGet(this, _movieData2)) throw new Error("영화 데이터가 존재하지 않습니다.");
+  __privateSet(this, _modalStar, new ModalStar(__privateGet(this, _movieData2)));
   starSection == null ? void 0 : starSection.appendChild(__privateGet(this, _modalStar).element);
 };
 _bindMovieClickedEvent = new WeakMap();
@@ -870,7 +870,7 @@ _bindESCEvent = new WeakMap();
 _bindClickBarckDrop = new WeakMap();
 fetchMovieDetails_fn = async function(movieData) {
   const movieDetails = await MovieClient$1.getMovieDetails(movieData.id);
-  __privateSet(this, _movieData, movieDetails);
+  __privateSet(this, _movieData2, movieDetails);
   return movieDetails;
 };
 class PageRenderer {
